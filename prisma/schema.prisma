@@ -21,6 +21,15 @@ model Example {
     updatedAt DateTime @updatedAt
 }
 
+model Comment {
+    id        String   @id @default(cuid())
+    text      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId  String
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -43,9 +52,9 @@ model Account {
 model Session {
     id           String   @id @default(cuid())
     sessionToken String   @unique
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId       String
     expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -56,6 +65,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    Comment       Comment[]
 }
 
 model VerificationToken {
